@@ -1,0 +1,21 @@
+{
+  "creators": [
+    {
+      "name": "Bücker, Daniel Henrique",
+      "affiliation": "Universidade Federal de Minas Gerais"
+    }
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "language": "por",
+  "keywords": [
+    "urocultura",
+    "infecção do trato urinário",
+    "aprendizado de máquina",
+    "urinálise",
+    "bacterioscopia pelo Gram",
+    "HC-UFMG"
+  ],
+  "title": "PreviTU V6: protótipo web para estimativa da probabilidade de urocultura positiva",
+  "description": "Protótipo web experimental (Django) com dois modelos HistGradientBoosting congelados (sem e com Gram) para estimar a probabilidade de urocultura positiva a partir do EAS, idade, sexo e origem assistencial. Desenvolvido na tese de doutorado de Daniel Henrique Bücker (PPGCASA, Faculdade de Medicina, UFMG, 2026). Software de pesquisa; não é dispositivo médico."
+}

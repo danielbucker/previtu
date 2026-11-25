@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load l10n v5 %}
+{% block content %}
+<div class="app-shell">
+  <section class="app-hero">
+    <div>
+      <span class="hero-pill">PreviTU V6 · artefatos congelados da tese (HistGradientBoosting)</span>
+      <h1>Estimativa de urocultura positiva</h1>
+      <p>A partir dos 9 parâmetros fisiológicos do EAS e dados demográficos/assistenciais (com ou sem Gram morfológico),
+         o PreviTU V6 estima a probabilidade calibrada de urocultura positiva. Duas vias independentes, cada uma com seu artefato, limiar e SHA-256.</p>
+    </div>
+    <div class="hero-status-card">
+      <span>Registros visíveis para você</span>
+      <strong>{{ total }}</strong>
+    </div>
+  </section>
+
+  <section class="v5-vias">
+    {% with c=sem_gram %}
+    <a href="{% url 'previsao_via' 'sem_gram' %}" class="quick-card primary-card v5-via-card">
+      <div class="quick-icon"><i class="bi bi-droplet-half"></i></div>
+      <div>
+        <span>Via padrão · sem bacterioscopia</span>
+        <h3>EAS fisiológico (12 campos)</h3>
+        <p>9 parâmetros fisiológicos do EAS (incluindo hemoglobina na fita) + idade, sexo e origem. HistGradientBoosting. AUROC 2023–2024: {{ c.roc_auc|num:4 }}.</p>
+        <p class="v5-mini">Limiar sens. 95% ({{ c.limiar_efetivo|pct:2 }}): {{ c.abaixo_pct|floatformat:1 }}% abaixo do limiar; {{ c.fn_por_mil|floatformat:1 }} positivas perdidas por mil pedidos (sens. {{ c.sensibilidade|pct:1 }}).</p>
+      </div>
+    </a>
+    {% endwith %}
+    {% with c=com_gram %}
+    <a href="{% url 'previsao_via' 'com_gram' %}" class="quick-card v5-via-card">
+      <div class="quick-icon"><i class="bi bi-eyedropper"></i></div>
+      <div>
+        <span>Via ampliada · com bacterioscopia</span>
+        <h3>EAS + Gram morfológico (16 campos)</h3>
+        <p>Mesmos 12 campos do EAS + 4 marcadores qualitativos do Gram (bactérias, BGN, CGP, leveduras). HistGradientBoosting. AUROC 2023–2024: {{ c.roc_auc|num:4 }}.</p>
+        <p class="v5-mini">Limiar sens. 95% ({{ c.limiar_efetivo|pct:2 }}): {{ c.abaixo_pct|floatformat:1 }}% abaixo do limiar; {{ c.fn_por_mil|floatformat:1 }} positivas perdidas por mil pedidos (sens. {{ c.sensibilidade|pct:1 }}).</p>
+      </div>
+    </a>
+    {% endwith %}
+  </section>
+
+  {% if ultima %}
+  <section class="clinical-card mt-4">
+    <span class="section-label">Último registro</span>
+    <p class="mb-0"><a href="{% url 'resultado' ultima.pk %}">{{ ultima.codigo_pedido }}</a> ·
+      {{ ultima.get_via_display }} · {{ ultima.percentual|floatformat:2 }}% ·
+      {{ ultima.get_classe_display }}</p>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

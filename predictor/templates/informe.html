@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load v5 %}
+{% block content %}
+<div class="v5-informe">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <h1>PreviTU V6 · Informe de estimativa</h1>
+      <p class="text-muted mb-1">Documento de apoio gerado por sistema experimental. Não é laudo e não substitui a urocultura.</p>
+    </div>
+    <button class="btn btn-outline-secondary d-print-none" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+  </div>
+  <table class="table table-sm v5-tabela mt-3">
+    <tr><th>Código do pedido</th><td>{{ p.codigo_pedido }}</td></tr>
+    <tr><th>Via</th><td>{{ p.get_via_display }}</td></tr>
+    <tr><th>Probabilidade estimada de urocultura positiva</th><td><strong>{{ p.probabilidade|pct:1 }}</strong></td></tr>
+    <tr><th>Classificação</th><td>{{ p.get_classe_display }} (limiar {{ p.limiar_efetivo|pct:2 }})</td></tr>
+    <tr><th>Modelo</th><td>{{ p.versao_modelo }}</td></tr>
+    <tr><th>SHA-256 do artefato</th><td><code>{{ p.modelo_sha256 }}</code></td></tr>
+    <tr><th>Campos ausentes</th><td>{% if p.campos_ausentes %}{{ p.campos_ausentes|join:", " }}{% else %}nenhum{% endif %}</td></tr>
+    {% if p.observacao %}<tr><th>Observação</th><td>{{ p.observacao }}</td></tr>{% endif %}
+  </table>
+  <h2 class="v5-secao">Dados informados</h2>
+  <table class="table table-sm v5-tabela">{% for rot, val in linhas %}<tr><th>{{ rot }}</th><td>{{ val }}</td></tr>{% endfor %}</table>
+  {% if p.alertas %}<h2 class="v5-secao">Alertas</h2><ul>{% for a in p.alertas %}<li>{{ a }}</li>{% endfor %}</ul>{% endif %}
+  <p class="v5-mini">Estar abaixo do limiar não autoriza dispensar a cultura. Gestação, transplante renal e crianças
+    pequenas ficam fora de qualquer uso do limiar. Registrado em {{ p.criado_em|date:"d/m/Y H:i" }} por {{ p.usuario.username }};
+    informe gerado em {{ gerado_em|date:"d/m/Y H:i" }}. {{ p.versao_site }}.</p>
+</div>
+{% endblock %}

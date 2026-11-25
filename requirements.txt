@@ -1,0 +1,9 @@
+# Dependências do PreviTU V6
+# Os artefatos .joblib em predictor/v6/ foram exportados com scikit-learn 1.7.2;
+# use exatamente essa versão para carregá-los.
+Django>=4.2,<6.0
+scikit-learn==1.7.2
+numpy>=2.0
+pandas>=2.2
+joblib>=1.4
+scipy>=1.13

@@ -1,0 +1,51 @@
+{
+  "versao": "V6_HGB_SEM_GRAM_2026-11-24",
+  "via": "sem_gram",
+  "algoritmo": "HistGradientBoostingClassifier",
+  "gerado_em_utc": "2026-11-24T22:25:28.250379+00:00",
+  "sklearn_version": "1.7.2",
+  "coorte_desenvolvimento": {
+    "periodo": "2011-2022",
+    "n_pedidos": 131945
+  },
+  "coorte_teste_temporal": {
+    "periodo": "2023-2024 (pacientes novos)",
+    "n_pedidos": 9425
+  },
+  "variaveis_numericas": [
+    "Idade_anos",
+    "UROT__GRAVID",
+    "UROT__GRAVID_DESVIO_QUAD",
+    "UROT__PH",
+    "UROT__GLIC",
+    "UROT__SEDHEM",
+    "UROT__SEDLEU",
+    "UROT__ESTERASE",
+    "UROT__FLORA",
+    "UROT__HEMOGL"
+  ],
+  "variaveis_categoricas": [
+    "Sexo",
+    "Origem",
+    "UROT__NITRIT"
+  ],
+  "hiperparametros": {
+    "learning_rate": 0.04,
+    "max_leaf_nodes": 31,
+    "min_samples_leaf": 60,
+    "max_iter": 250,
+    "random_state": 42
+  },
+  "limiares": {
+    "youden": 0.20343186387277354,
+    "sensibilidade_95": 0.05357552116357956
+  },
+  "desempenho_2023_2024": {
+    "auroc": 0.8862902455353999,
+    "pr_auc": 0.8000450701775055,
+    "brier": 0.09207900318928984
+  },
+  "hashes": {
+    "modelo_sha256": "462aded6ff5dbb036ff0f84e4cab70f4a6b742e6f294e6659e861adf0b4909e7"
+  }
+}

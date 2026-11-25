@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load v5 %}
+{% block content %}
+<div class="prediction-shell">
+  <section class="prediction-hero">
+    <div>
+      <span class="hero-pill">{% if via == 'com_gram' %}Via com Gram · EAS + 4 marcadores morfológicos (HGB){% else %}Via sem Gram · EAS fisiológico (HGB){% endif %}</span>
+      <h1>Nova estimativa</h1>
+      <p>{% if via == 'com_gram' %}9 parâmetros fisiológicos do EAS + dados do paciente/origem + 4 marcadores qualitativos do Gram. Modelo HistGradientBoosting congelado (2011–2022).
+         {% else %}9 parâmetros fisiológicos do EAS (incluindo hemoglobina na fita) + idade, sexo e origem. Modelo HistGradientBoosting congelado (2011–2022).{% endif %}</p>
+    </div>
+    <div class="prediction-hero-actions">
+      <a href="?exemplo=1" class="btn btn-light btn-lg"><i class="bi bi-magic me-2"></i>Preencher caso fictício</a>
+      {% if via == 'sem_gram' %}
+        <a href="{% url 'previsao_via' 'com_gram' %}" class="btn btn-outline-light btn-lg">Ir para a via com Gram</a>
+      {% else %}
+        <a href="{% url 'previsao_via' 'sem_gram' %}" class="btn btn-outline-light btn-lg">Ir para a via sem Gram</a>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if erros %}
+  <div class="alert alert-danger"><strong>Revise antes de enviar:</strong>
+    <ul class="mb-0">{% for e in erros %}<li>{{ e }}</li>{% endfor %}</ul></div>
+  {% endif %}
+
+  <form method="post" class="prediction-card prediction-form" novalidate>
+    {% csrf_token %}
+    <div class="row g-3 mb-2">
+      <div class="col-md-5">
+        <label class="form-label" for="codigo_pedido">Código do pedido (pseudonimizado)</label>
+        <input class="form-control" id="codigo_pedido" name="codigo_pedido" maxlength="40"
+               value="{{ valores.codigo_pedido|default:'' }}" placeholder="Ex.: DEMO-001" required>
+        <div class="form-text">Sem espaços e com ao menos um número. Não digite nome de paciente.</div>
+      </div>
+      <div class="col-md-7">
+        <label class="form-label" for="observacao">Observação (opcional)</label>
+        <input class="form-control" id="observacao" name="observacao" maxlength="300" value="{{ valores.observacao|default:'' }}">
+      </div>
+    </div>
+
+    {% for secao, lista in secoes %}
+      <h3 class="v5-secao">{{ secao }}</h3>
+      <div class="row g-3">
+      {% for c in lista %}
+        <div class="col-md-4 col-lg-3">
+          <label class="form-label" for="{{ c.nome }}">{{ c.rotulo }}</label>
+          {% if c.tipo == 'select' %}
+            <select class="form-select" id="{{ c.nome }}" name="{{ c.nome }}">
+              <option value="">Não informado</option>
+              {% for valor, rotulo in c.opcoes %}
+                <option value="{{ valor }}" {% for k, v in valores.items %}{% if k == c.nome and v == valor %}selected{% endif %}{% endfor %}>{{ rotulo }}</option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <input class="form-control" type="number" id="{{ c.nome }}" name="{{ c.nome }}" step="{{ c.passo }}"
+                   {% if c.min is not None %}min="{{ c.min }}"{% endif %} {% if c.max is not None %}max="{{ c.max }}"{% endif %}
+                   value="{% for k, v in valores.items %}{% if k == c.nome %}{{ v }}{% endif %}{% endfor %}"
+                   placeholder="em branco = não informado">
+          {% endif %}
+          {% if c.ajuda %}<div class="form-text">{{ c.ajuda }}</div>{% endif %}
+        </div>
+      {% endfor %}
+      </div>
+    {% endfor %}
+
+    <div class="v5-regra mt-4">
+      <i class="bi bi-info-circle me-2"></i>
+      Idade, sexo e origem são obrigatórios. Qualquer parâmetro laboratorial deixado em branco é tratado como <strong>ausente</strong>
+      (imputado pela mediana/categoria ausente do treino com indicador de ausência — nunca vira zero).
+      Limiar desta via: <strong>{{ card.limiar_efetivo|pct:2 }}</strong> (regra de sensibilidade de 95%, derivada em 2011–2022).
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg w-100 mt-3"><i class="bi bi-activity me-2"></i>Estimar probabilidade</button>
+  </form>
+</div>
+{% endblock %}

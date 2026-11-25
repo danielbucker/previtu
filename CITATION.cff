@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Se usar este software, cite a tese e este repositório."
+title: "PreviTU V6: protótipo web para estimativa da probabilidade de urocultura positiva"
+authors:
+  - family-names: "Bücker"
+    given-names: "Daniel Henrique"
+version: "6.0.0"
+date-released: "2026-11-25"
+license: MIT
+repository-code: "https://github.com/danielbucker/previtu"

@@ -1,0 +1,61 @@
+{% load static %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PreviTU V6 | Estimativa de urocultura positiva</title>
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/v5.css' %}">
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <header class="professional-topbar">
+    <div class="professional-topbar-inner">
+      <a href="{% url 'dashboard' %}" class="professional-brand">
+        <div class="professional-logo"><i class="bi bi-droplet-half"></i></div>
+        <div>
+          <strong>PreviTU <small class="v5-tag">V6</small></strong>
+          <span>Estimativa de urocultura positiva</span>
+        </div>
+      </a>
+      <nav class="professional-nav">
+        <a href="{% url 'dashboard' %}">Início</a>
+        <a href="{% url 'previsao_via' 'sem_gram' %}">Sem Gram</a>
+        <a href="{% url 'previsao_via' 'com_gram' %}">Com Gram</a>
+        <a href="{% url 'historico' %}">Histórico</a>
+        <a href="{% url 'sobre' %}">Sobre o modelo</a>
+      </nav>
+      <div class="professional-user-area">
+        <div class="professional-user-chip"><i class="bi bi-person-circle"></i><span>{{ user.username }}</span></div>
+        <form action="{% url 'logout' %}" method="post" class="m-0">{% csrf_token %}
+          <button type="submit" class="professional-logout"><i class="bi bi-box-arrow-right"></i> Sair</button>
+        </form>
+      </div>
+    </div>
+  </header>
+  {% endif %}
+
+  <main class="{% if user.is_authenticated %}app-main{% else %}auth-main{% endif %}">
+    {% if messages %}
+      <div class="message-wrapper">
+        {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} shadow-sm">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  {% if user.is_authenticated %}
+  <footer class="v5-footer">
+    Uso experimental, de ensino e pesquisa. Estima a probabilidade de <strong>urocultura positiva</strong>
+    (desfecho laboratorial): não é diagnóstico de infecção do trato urinário, não indica antimicrobiano
+    e não autoriza cancelar a cultura.
+  </footer>
+  {% endif %}
+  <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

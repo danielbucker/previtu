@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load v5 %}
+{% block content %}
+<div class="prediction-shell">
+  <section class="prediction-hero">
+    <div>
+      <span class="hero-pill">{{ p.get_via_display }}</span>
+      <h1>Resultado · {{ p.codigo_pedido }}</h1>
+      <p>Probabilidade estimada de a urocultura sair positiva.</p>
+    </div>
+    <div class="prediction-hero-actions">
+      <a href="{% url 'previsao_via' p.via %}" class="btn btn-light btn-lg"><i class="bi bi-plus-circle me-2"></i>Nova estimativa</a>
+      <a href="{% url 'informe' p.pk %}" class="btn btn-outline-light btn-lg"><i class="bi bi-printer me-2"></i>Informe</a>
+    </div>
+  </section>
+
+  <section class="prediction-grid">
+    <div class="prediction-card result-card-modern">
+      <div class="result-panel-modern">
+        <div class="result-number">{{ p.probabilidade|pct:1 }}</div>
+        {% if p.classe == 'acima' %}
+          <div class="risk-badge risk-high">Acima do limiar de triagem desta versão</div>
+        {% else %}
+          <div class="risk-badge risk-low">Abaixo do limiar de triagem desta versão</div>
+        {% endif %}
+        <p class="clinical-note mt-3">
+          Limiar desta via: <strong>{{ p.limiar_efetivo|pct:2 }}</strong> (sensibilidade de 95% derivada em 2011–2022).
+          O mesmo limiar está gravado neste registro e aparece no histórico e no informe.
+        </p>
+        <div class="v5-escala" aria-hidden="true">
+          <div class="v5-escala-barra">
+            <div class="v5-escala-limiar" style="left: {{ p.limiar_efetivo|css_pct }}%;"><span>limiar {{ p.limiar_efetivo|pct:1 }}</span></div>
+            <div class="v5-escala-ponto {% if p.classe == 'acima' %}acima{% endif %}" style="left: {{ p.probabilidade|css_pct }}%;"></div>
+          </div>
+          <div class="v5-escala-rotulos"><span>0%</span><span>50%</span><span>100%</span></div>
+        </div>
+        <p class="v5-mini mt-3">
+          Na validação temporal de 2023–2024 (n={{ card.teste.n_pedidos|milhar }}), {{ card.abaixo_pct|floatformat:1 }}% dos pedidos ficaram abaixo deste limiar e
+          {{ card.fn_por_mil|floatformat:1 }} culturas positivas por mil pedidos ficaram abaixo dele
+          (sensibilidade {{ card.sensibilidade|pct:1 }}; VPN {{ card.vpn|pct:1 }}).
+          <strong>Estar abaixo do limiar não autoriza dispensar a cultura.</strong>
+        </p>
+      </div>
+
+      {% if p.alertas %}
+      <div class="alerts-grid mt-3">
+        {% for a in p.alertas %}
+        <div class="modern-alert-card alert-leve">
+          <div class="modern-alert-icon"><i class="bi bi-info-circle"></i></div>
+          <div><p class="mb-0">{{ a }}</p></div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="v5-grupos mt-3">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        Fora de qualquer uso do limiar: <strong>gestação</strong>, <strong>transplante renal</strong>,
+        <strong>uropatia/cateterismo</strong> e <strong>crianças pequenas</strong> — o laboratório valoriza baixas contagens pelo contexto clínico.
+      </div>
+    </div>
+
+    <div class="prediction-card">
+      <div class="prediction-card-header"><div><span>Rastreabilidade</span><h3>Como este número foi gerado</h3></div></div>
+      <table class="table table-sm v5-tabela">
+        <tr><th>Via</th><td>{{ p.get_via_display }}</td></tr>
+        <tr><th>Modelo</th><td>{{ p.versao_modelo }}</td></tr>
+        <tr><th>SHA-256 do artefato</th><td><code>{{ p.modelo_sha256|curto:16 }}…</code></td></tr>
+        <tr><th>Probabilidade</th><td>{{ p.probabilidade|num:6 }}</td></tr>
+        <tr><th>Limiar operacional</th><td>{{ p.limiar_efetivo|num:10 }}</td></tr>
+        <tr><th>Campos ausentes</th><td>{% if p.campos_ausentes %}{{ p.campos_ausentes|join:", " }}{% else %}nenhum{% endif %}</td></tr>
+        <tr><th>Registrado em</th><td>{{ p.criado_em|date:"d/m/Y H:i" }} por {{ p.usuario.username }}</td></tr>
+      </table>
+      <h4 class="v5-secao">Dados informados</h4>
+      <table class="table table-sm v5-tabela">
+        {% for rot, val in linhas %}<tr><th>{{ rot }}</th><td>{{ val }}</td></tr>{% endfor %}
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

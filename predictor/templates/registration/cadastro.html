@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="login-shell register-shell">
+
+  <section class="login-hero">
+    <span class="hero-pill">PreviTU</span>
+
+    <h1>Crie seu acesso à plataforma</h1>
+
+    <p>
+      Cadastre um usuário e senha para acessar a estimativa de urocultura positiva,
+      histórico de previsões e resultados complementares.
+    </p>
+
+    <div class="login-feature-list">
+      <div class="login-feature">
+        <i class="bi bi-person-check"></i>
+        <span>Acesso individual para cada usuário</span>
+      </div>
+
+      <div class="login-feature">
+        <i class="bi bi-clock-history"></i>
+        <span>Histórico salvo por conta</span>
+      </div>
+
+      <div class="login-feature">
+        <i class="bi bi-shield-check"></i>
+        <span>Ambiente protegido por login e senha</span>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="login-card register-card">
+
+    <div class="mb-4">
+      <div class="brand-mark mb-3">
+        <i class="bi bi-person-plus"></i>
+      </div>
+
+      <h2>Criar nova conta</h2>
+      <p>Preencha os dados abaixo para acessar o PreviTU.</p>
+    </div>
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Revise os campos abaixo. O usuário pode já existir ou a senha pode não atender aos critérios mínimos.
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="id_username" class="form-label">Usuário</label>
+        <input
+          type="text"
+          name="username"
+          maxlength="150"
+          autofocus
+          required
+          id="id_username"
+          class="form-control"
+          placeholder="Escolha um nome de usuário"
+          value="{{ form.username.value|default:'' }}"
+        >
+
+        {% if form.username.errors %}
+          <div class="form-error-text">
+            {{ form.username.errors|striptags }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_password1" class="form-label">Senha</label>
+        <input
+          type="password"
+          name="password1"
+          autocomplete="new-password"
+          required
+          id="id_password1"
+          class="form-control"
+          placeholder="Digite uma senha"
+        >
+
+        {% if form.password1.errors %}
+          <div class="form-error-text">
+            {{ form.password1.errors|striptags }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_password2" class="form-label">Confirmar senha</label>
+        <input
+          type="password"
+          name="password2"
+          autocomplete="new-password"
+          required
+          id="id_password2"
+          class="form-control"
+          placeholder="Repita a senha"
+        >
+
+        {% if form.password2.errors %}
+          <div class="form-error-text">
+            {{ form.password2.errors|striptags }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="password-guidance">
+        <i class="bi bi-info-circle"></i>
+        <div>
+          <strong>Orientação de senha</strong>
+          <span>
+            Use uma senha segura, evitando senhas muito curtas, comuns ou parecidas com o nome de usuário.
+          </span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 btn-lg mt-4">
+        Criar conta
+      </button>
+    </form>
+
+    <div class="mt-4 text-center">
+      <a href="{% url 'login' %}" class="text-muted">
+        Já tenho uma conta. Entrar
+      </a>
+    </div>
+
+  </section>
+
+</div>
+
+{% endblock %}

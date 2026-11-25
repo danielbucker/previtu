@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load v5 %}
+{% block content %}
+<div class="history-page-shell">
+  <section class="prediction-hero">
+    <div>
+      <span class="hero-pill">Registro de uso</span>
+      <h1>Histórico de estimativas</h1>
+      <p>Cada registro guarda a via, o modelo, o hash SHA-256 do artefato e o limiar usados — os mesmos exibidos na tela.</p>
+    </div>
+    <div class="prediction-hero-actions">
+      <a href="{% url 'exportar_historico' %}" class="btn btn-light btn-lg"><i class="bi bi-download me-2"></i>Exportar CSV</a>
+    </div>
+  </section>
+  <section class="history-panel">
+    {% if previsoes %}
+    <div class="history-table-wrapper">
+      <table class="table history-table">
+        <thead><tr><th>Data</th><th>Código</th><th>Via</th><th>Probabilidade</th><th>Classe</th><th>Limiar</th><th>Artefato</th><th></th></tr></thead>
+        <tbody>
+        {% for p in previsoes %}
+          <tr>
+            <td>{{ p.criado_em|date:"d/m/Y H:i" }}<br><small class="text-muted">{{ p.usuario.username }}</small></td>
+            <td><strong>{{ p.codigo_pedido }}</strong></td>
+            <td>{% if p.via == 'com_gram' %}Com Gram · HGB{% else %}Sem Gram · HGB{% endif %}</td>
+            <td>{{ p.probabilidade|pct:1 }}</td>
+            <td><span class="risk-pill {% if p.classe == 'acima' %}risk-pill-high{% else %}risk-pill-low{% endif %}">{{ p.get_classe_display }}</span></td>
+            <td>{{ p.limiar_efetivo|pct:2 }}</td>
+            <td><code>{{ p.modelo_sha256|curto:8 }}</code></td>
+            <td><a href="{% url 'resultado' p.pk %}">abrir</a> · <a href="{% url 'informe' p.pk %}">informe</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <p class="p-4 mb-0">Nenhum registro ainda.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

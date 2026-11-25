@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+db.sqlite3
+venv*/
+.env
+staticfiles/
+predictor/v6/amostra_auditoria_*
+predictor/v6/predicoes_*

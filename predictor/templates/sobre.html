@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load v5 %}
+{% block content %}
+<div class="about-page-shell">
+  <section class="prediction-hero">
+    <div>
+      <span class="hero-pill">Sobre o modelo</span>
+      <h1>PreviTU V6</h1>
+      <p>Os números desta página refletem os model cards congelados em {{ sem_gram.congelado_em }} e a validação temporal de 2023–2024 em pacientes inéditos.</p>
+    </div>
+  </section>
+
+  <section class="modern-section">
+    <h3>Desempenho na validação temporal 2023–2024 (pacientes inéditos)</h3>
+    <p class="v5-mini">Desenvolvimento (2011–2022): {{ sem_gram.treino.n_pedidos|milhar }} pedidos. Validação temporal (2023–2024, pacientes sem histórico no treino): {{ sem_gram.teste.n_pedidos|milhar }} pedidos, {{ sem_gram.teste.n_positivas|milhar }} positivas.</p>
+    <table class="table v5-tabela v5-comp">
+      <thead><tr><th></th><th>Via sem Gram (EAS fisiológico)</th><th>Via com Gram (EAS + 4 marcadores)</th></tr></thead>
+      <tbody>
+        <tr><th>Algoritmo</th><td>{{ sem_gram.algoritmo }}</td><td>{{ com_gram.algoritmo }}</td></tr>
+        <tr><th>Variáveis de entrada</th><td>{{ sem_gram.n_variaveis }}</td><td>{{ com_gram.n_variaveis }}</td></tr>
+        <tr><th>AUROC (IC 95%)</th><td>{{ sem_gram.roc_auc|num:4 }} ({{ sem_gram.roc_auc_ic95.0|num:4 }}–{{ sem_gram.roc_auc_ic95.1|num:4 }})</td><td>{{ com_gram.roc_auc|num:4 }} ({{ com_gram.roc_auc_ic95.0|num:4 }}–{{ com_gram.roc_auc_ic95.1|num:4 }})</td></tr>
+        <tr><th>PR-AUC</th><td>{{ sem_gram.pr_auc|num:4 }}</td><td>{{ com_gram.pr_auc|num:4 }}</td></tr>
+        <tr><th>Brier score</th><td>{{ sem_gram.brier|num:4 }}</td><td>{{ com_gram.brier|num:4 }}</td></tr>
+        <tr><th>Calibração: intercepto / inclinação</th><td>{{ sem_gram.cal_intercepto|num:3 }} / {{ sem_gram.cal_inclinacao|num:3 }}</td><td>{{ com_gram.cal_intercepto|num:3 }} / {{ com_gram.cal_inclinacao|num:3 }}</td></tr>
+        <tr><th>Limiar operacional (sens. 95% no treino)</th><td>{{ sem_gram.limiar_efetivo|num:6 }}</td><td>{{ com_gram.limiar_efetivo|num:6 }}</td></tr>
+        <tr><th>Sensibilidade observada (2023–2024)</th><td>{{ sem_gram.sensibilidade|pct:1 }}</td><td>{{ com_gram.sensibilidade|pct:1 }}</td></tr>
+        <tr><th>Especificidade</th><td>{{ sem_gram.especificidade|pct:1 }}</td><td>{{ com_gram.especificidade|pct:1 }}</td></tr>
+        <tr><th>Valor preditivo negativo (VPN)</th><td>{{ sem_gram.vpn|pct:1 }}</td><td>{{ com_gram.vpn|pct:1 }}</td></tr>
+        <tr><th>Pedidos abaixo do limiar</th><td>{{ sem_gram.abaixo_pct|floatformat:1 }}%</td><td>{{ com_gram.abaixo_pct|floatformat:1 }}%</td></tr>
+        <tr><th>Positivas abaixo do limiar, por mil pedidos</th><td>{{ sem_gram.fn_por_mil|floatformat:1 }}</td><td>{{ com_gram.fn_por_mil|floatformat:1 }}</td></tr>
+        <tr><th>SHA-256 do artefato</th><td><code>{{ sem_gram.sha256|curto:16 }}…</code></td><td><code>{{ com_gram.sha256|curto:16 }}…</code></td></tr>
+      </tbody>
+    </table>
+    <p class="v5-mini">Ganho pareado da incorporação qualitativa do Gram no HistGradientBoosting (2023–2024): ΔAUROC = +0,0269 (IC 95%: +0,0223 a +0,0318; p = 0,002) e ΔPR-AUC = +0,0621 (p = 0,002).</p>
+  </section>
+
+  <section class="about-two-column">
+    <div class="modern-section about-section-card">
+      <h3>O que é e o que não é</h3>
+      <p>Estima a probabilidade de <strong>urocultura positiva</strong> — desfecho microbiológico laboratorial.
+         Não é diagnóstico de infecção do trato urinário, não indica antimicrobiano e não autoriza cancelar ou suprimir a urocultura.</p>
+      <p>O algoritmo <strong>HistGradientBoostingClassifier</strong> foi o vencedor nos dois braços experimentais frente a Elastic Net, Random Forest e TabResNet na tese.</p>
+      <h4 class="v5-secao">Limitações declaradas</h4>
+      <ul>{% for l in sem_gram.limitacoes %}<li>{{ l }}</li>{% endfor %}</ul>
+    </div>
+    <div class="modern-section about-section-card">
+      <h3>Governança e reprodutibilidade</h3>
+      <p>Os dois pipelines são congelados em arquivos <code>.joblib</code> verificados por hash SHA-256 a cada inicialização.
+         O termo quadrático da densidade urinária <code>(densidade − 1,015)²</code> é computado automaticamente pelo núcleo auditável <code>previtu_core_v6.py</code>,
+         preservando valores ausentes sem jamais substituí-los por zero.</p>
+      <h4 class="v5-secao">Autoria</h4>
+      <p class="mb-1">Aplicação web original: Victor Theodoro Silva Sampaio (iniciação científica).</p>
+      <p class="mb-1">Modelagem, congelamento e integração V6: Daniel Henrique Bücker.</p>
+      <p>Orientação: Prof. Dr. Leonardo de Souza Vasconcellos. HC-UFMG/Ebserh · FM-UFMG.</p>
+      <p class="v5-mini">{{ versao_site }}. Artefatos exportados com scikit-learn {{ sem_gram.sklearn_version }}.</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

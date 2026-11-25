@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="login-shell">
+
+  <section class="login-hero">
+    <span class="hero-pill">PreviTU V6</span>
+
+    <h1>Estimativa de urocultura positiva a partir da urina rotina</h1>
+
+    <p>
+      Protótipo experimental, de ensino e pesquisa, que roda os artefatos congelados da tese
+      (HC-UFMG/Ebserh · FM-UFMG). Não é diagnóstico de infecção do trato urinário.
+    </p>
+
+    <div class="login-feature-list">
+      <div class="login-feature">
+        <i class="bi bi-shield-check"></i>
+        <span>Acesso individual por usuário e senha</span>
+      </div>
+
+      <div class="login-feature">
+        <i class="bi bi-clipboard2-pulse"></i>
+        <span>Duas vias: EAS fisiológico (sem Gram) ou EAS + Gram morfológico</span>
+      </div>
+
+      <div class="login-feature">
+        <i class="bi bi-fingerprint"></i>
+        <span>Cada registro guarda modelo, limiar e hash do artefato</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="login-card">
+
+    <div class="mb-4">
+      <div class="brand-mark mb-3">
+        <i class="bi bi-droplet-half"></i>
+      </div>
+
+      <h2>Entrar no PreviTU</h2>
+      <p>Informe seu usuário e senha para acessar a plataforma.</p>
+    </div>
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Usuário ou senha inválidos. Tente novamente.
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="id_username" class="form-label">Usuário</label>
+        <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username"
+          maxlength="150" required id="id_username" class="form-control" placeholder="Digite seu usuário">
+      </div>
+
+      <div class="mb-4">
+        <label for="id_password" class="form-label">Senha</label>
+        <input type="password" name="password" autocomplete="current-password"
+          required id="id_password" class="form-control" placeholder="Digite sua senha">
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 btn-lg">
+        Entrar
+      </button>
+    </form>
+
+    {% if cadastro_aberto %}
+    <div class="mt-4 text-center">
+      <a href="{% url 'cadastro' %}" class="text-muted">
+        Ainda não tenho cadastro
+      </a>
+    </div>
+    {% endif %}
+
+  </section>
+
+</div>
+
+{% endblock %}
