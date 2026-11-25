@@ -7,4 +7,5 @@ authors:
 version: "6.0.0"
 date-released: "2026-11-25"
 license: MIT
+doi: "10.5281/zenodo.24538117"
 repository-code: "https://github.com/danielbucker/previtu"

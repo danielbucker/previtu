@@ -1,5 +1,7 @@
 # PreviTU V6 — estimativa da probabilidade de urocultura positiva
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24538117.svg)](https://doi.org/10.5281/zenodo.24538117)
+
 Protótipo web experimental desenvolvido na tese de doutorado de **Daniel Henrique Bücker** (Programa de Pós-Graduação em Ciências Aplicadas à Saúde do Adulto, Faculdade de Medicina da UFMG; orientador: Prof. Leonardo de Souza Vasconcellos). A partir do exame de urina rotina (EAS), de idade, sexo e origem assistencial, e opcionalmente de quatro achados qualitativos da bacterioscopia pelo Gram, o PreviTU estima a probabilidade calibrada de a urocultura quantitativa ser positiva.
 
 > **Aviso.** Software de pesquisa. Não é dispositivo médico, não foi validado prospectivamente e não deve ser usado para decidir sozinho a realização, o cancelamento ou a interpretação de exames, nem a conduta clínica. Não insira dados identificáveis de pacientes.
@@ -79,6 +81,8 @@ A auditoria completa compara o núcleo com as 9.425 predições congeladas de 20
 ## Como citar
 
 BÜCKER, D. H. *Perfil demográfico, espectro microbiológico e potencial preditivo dos testes de urina rotina e bacterioscopia nos resultados de uroculturas ambulatoriais e hospitalares de pacientes assistidos em serviço público de Minas Gerais*. Tese (Doutorado em Ciências Aplicadas à Saúde do Adulto) — Faculdade de Medicina, Universidade Federal de Minas Gerais, Belo Horizonte, 2026.
+
+DOI desta versão (Zenodo): [10.5281/zenodo.24538117](https://doi.org/10.5281/zenodo.24538117).
 
 ## Licença
 
